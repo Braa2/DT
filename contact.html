@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تواصل معنا - الهدف الرقمي</title>
+    
+    <!-- External fonts and icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Site fonts and shared styles for consistency -->
+    <link rel="stylesheet" href="font.css">
+    <link rel="stylesheet" href="arabic-hero.css">
+    
+    <style>
+        /* Smooth back slide overlay (same feel as loader) */
+        .back-slide-overlay {
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            background: linear-gradient(180deg, #000000 0%, #0b0f1a 100%);
+            transform: translateY(-100%);
+            transition: transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+            z-index: 10000;
+        }
+        .back-slide-overlay.active { transform: translateY(0); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #ffffff;
+            color: #000;
+            min-height: 100vh;
+            opacity: 1 !important;
+            overflow-x: hidden;
+        }
+
+        /* Header with back button */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            border: 2px solid #000;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #00ffff 0%, #00bfff 100%);
+            border-color: #00bfff;
+            color: #fff;
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            font-size: 1.5rem;
+        }
+
+        /* Full page container */
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            padding: 120px 40px 40px 40px;
+            background: #ffffff;
+            opacity: 1;
+            transform: none;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #000;
+            font-weight: 800;
+            opacity: 1;
+            transform: none;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #000;
+            margin-bottom: 50px;
+            line-height: 1.6;
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Form inputs - Clean version */
+        input, textarea, select {
+            width: 100%;
+            padding: 15px 0;
+            border: none !important;
+            border-bottom: 3px solid #000 !important;
+            border-radius: 0;
+            background: transparent !important;
+            color: #000;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.2rem;
+            direction: rtl;
+            text-align: right;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            position: relative;
+            margin-bottom: 40px;
+            box-shadow: none !important;
+        }
+
+        /* Auto-resize textarea */
+        textarea {
+            resize: none;
+            min-height: 40px;
+            overflow: hidden;
+        }
+
+        /* Remove ALL validation styling */
+        input:invalid, input:valid, input:required, 
+        textarea:invalid, textarea:valid, textarea:required {
+            border: none !important;
+            border-bottom: 3px solid #000 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        /* Focus state */
+        input:focus, textarea:focus {
+            outline: none !important;
+            border-bottom-color: #00bfff !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        /* Rope animation */
+        @keyframes ropeWave {
+            0% { transform: translateY(0px); }
+            25% { transform: translateY(-2px); }
+            50% { transform: translateY(0px); }
+            75% { transform: translateY(2px); }
+            100% { transform: translateY(0px); }
+        }
+
+        input:hover, textarea:hover {
+            animation: ropeWave 1.2s ease-in-out infinite;
+        }
+
+        input:focus, textarea:focus {
+            animation: none;
+        }
+
+        /* Form group styling - remove spiral effect */
+        .form-group {
+            margin-bottom: 35px;
+            opacity: 1;
+            transform: none;
+            position: relative;
+        }
+
+        /* Enhanced label styling */
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #000;
+            position: relative;
+        }
+
+        .section-label {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInFromBottom 0.6s ease-out 0.3s forwards;
+        }
+
+        .interests-section,
+        .budget-section,
+        .file-upload-section {
+            margin-bottom: 30px;
+        }
+
+        /* Interests Grid with Animation */
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .interest-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 20px;
+            background: #f8f9fa;
+            border: 2px solid #000;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            min-height: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Animation delays for interests */
+        .interest-option:nth-child(1) { animation: slideInFromBottom 0.5s ease-out 0.5s forwards; }
+        .interest-option:nth-child(2) { animation: slideInFromBottom 0.5s ease-out 0.6s forwards; }
+        .interest-option:nth-child(3) { animation: slideInFromBottom 0.5s ease-out 0.7s forwards; }
+        .interest-option:nth-child(4) { animation: slideInFromBottom 0.5s ease-out 0.8s forwards; }
+        .interest-option:nth-child(5) { animation: slideInFromBottom 0.5s ease-out 0.9s forwards; }
+        .interest-option:nth-child(6) { animation: slideInFromBottom 0.5s ease-out 1.0s forwards; }
+
+        /* Hover effect - text disappears from top and appears from bottom */
+        .interest-option:hover .option-text {
+            animation: textFlipVertical 0.6s ease-in-out;
+        }
+
+        /* Selected state - fill from bottom */
+        .interest-option.selected {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+            position: relative;
+        }
+
+        .interest-option.selected::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: translateY(100%);
+            animation: fillFromBottom 0.4s ease-out forwards;
+            z-index: 1;
+        }
+
+        .interest-option .option-text {
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            display: block;
+        }
+
+        .interest-option.selected .option-text {
+            color: #fff;
+        }
+
+        /* Budget Grid with Animation */
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .budget-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 25px;
+            background: #f8f9fa;
+            border: 2px solid #000;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            min-height: 70px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Animation delays for budget options */
+        .budget-option:nth-child(1) { animation: slideInFromBottom 0.5s ease-out 1.2s forwards; }
+        .budget-option:nth-child(2) { animation: slideInFromBottom 0.5s ease-out 1.3s forwards; }
+        .budget-option:nth-child(3) { animation: slideInFromBottom 0.5s ease-out 1.4s forwards; }
+        .budget-option:nth-child(4) { animation: slideInFromBottom 0.5s ease-out 1.5s forwards; }
+        .budget-option:nth-child(5) { animation: slideInFromBottom 0.5s ease-out 1.6s forwards; }
+        .budget-option:nth-child(6) { animation: slideInFromBottom 0.5s ease-out 1.7s forwards; }
+        /* Hover effect - text disappears from top and appears from bottom */
+        .budget-option:hover .option-text {
+            animation: textFlipVertical 0.6s ease-in-out;
+        }
+
+        /* Selected state - fill from bottom */
+        .budget-option.selected {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+            position: relative;
+        }
+
+        .budget-option.selected::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: translateY(100%);
+            animation: fillFromBottom 0.4s ease-out forwards;
+            z-index: 1;
+        }
+
+        .budget-option .option-text {
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            display: block;
+        }
+
+        .budget-option.selected .option-text {
+            color: #fff;
+        }
+
+        /* File upload section */
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .file-upload-area:hover {
+            border-color: #00bfff;
+            background: rgba(0, 191, 255, 0.02);
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            color: #6c757d;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-upload-label i {
+            font-size: 4rem;
+            color: #00bfff;
+        }
+
+        .file-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00ffff 0%, #00bfff 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0;
+        }
+
+        .submit-btn:hover {
+            background: #0099cc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Animations */
+        @keyframes slideInFromBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fillFromBottom {
+            0% {
+                transform: translateY(100%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Text animation - disappears from top, appears from bottom */
+        @keyframes textFlipVertical {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            51% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Smooth reveal for interest and budget options */
+        .interest-option .option-label,
+        .budget-option .option-label {
+            display: inline-block;
+            transition: 
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .interest-option:hover .option-label,
+        .interest-option input[type="checkbox"]:focus + .checkmark + .option-label,
+        .budget-option:hover .option-label,
+        .budget-option input[type="radio"]:focus + .radio-mark + .option-label {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Optional: Add a mask effect from the bottom */
+        .interest-option,
+        .budget-option {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .interest-option::after,
+        .budget-option::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 60%;
+            background: linear-gradient(to top, #fff 60%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s;
+            opacity: 1;
+        }
+        .interest-option:hover::after,
+        .budget-option:hover::after {
+            opacity: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .container {
+                padding: 100px 20px 20px 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .interests-grid,
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Increase icon sizes */
+        .file-upload-label i {
+            font-size: 4rem;
+            color: #00bfff;
+        }
+
+        .back-button i {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <!-- Header with back button -->
+        <div class="header">
+            <button class="back-button" type="button">
+                <i class="ri-arrow-right-line"></i>
+                <span>العودة</span>
+            </button>
+        </div>
+
+        <!-- Contact content -->
+        <div class="container">
+            <div class="contact-content">
+                <h1>اهلا وسهلا!</h1>
+                <p class="subtitle">اخبرنا بتفاصيل فكرتك أو مشروعك</p>
+                
+                <form id="contactForm">
+                    <!-- Interest In Section -->
+                    <div class="interests-section">
+                        <label class="section-label">أنا مهتم بـ...</label>
+                        <div class="interests-grid">
+                            <div class="interest-option" data-value="website">
+                                <span class="option-text">موقع إلكتروني</span>
+                            </div>
+                            <div class="interest-option" data-value="mobile-app">
+                                <span class="option-text">تطبيق جوال</span>
+                            </div>
+                            <div class="interest-option" data-value="branding">
+                                <span class="option-text">هوية تجارية</span>
+                            </div>
+                            <div class="interest-option" data-value="ui-ux">
+                                <span class="option-text">تصميم UI/UX</span>
+                            </div>
+                            <div class="interest-option" data-value="digital-marketing">
+                                <span class="option-text"> أنظمة إدارة موارد المؤسسات</span>
+                            </div>
+                            <div class="interest-option" data-value="other">
+                                <span class="option-text">أخرى</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name Field -->
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email">الايميل</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="form-group">
+                        <label for="phone">رقم التواصل</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <!-- Project Details -->
+                    <div class="form-group">
+                        <label for="details">زودنا بالتفاصيل</label>
+                        <textarea id="details" name="details" required></textarea>
+                    </div>
+
+                    <!-- Project Budget -->
+                    <div class="budget-section">
+                        <label class="section-label">ميزانية المشروع</label>
+                        <div class="budget-grid">
+                            <div class="budget-option" data-value="5k-15k">
+                                <span class="option-text">5,000 - 15,000 ريال</span>
+                            </div>
+                            <div class="budget-option" data-value="15k-30k">
+                                <span class="option-text">15,000 - 30,000 ريال</span>
+                            </div>
+                            <div class="budget-option" data-value="30k-50k">
+                                <span class="option-text">30,000 - 50,000 ريال</span>
+                            </div>
+                            <div class="budget-option" data-value="50k-100k">
+                                <span class="option-text">50,000 - 100,000 ريال</span>
+                            </div>
+                            <div class="budget-option" data-value="100k+">
+                                <span class="option-text">أكثر من 100,000 ريال</span>
+                            </div>
+                            <div class="budget-option" data-value="unknown">
+                                <span class="option-text">ارغب بتقييم ميزانية المشروع</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="file-upload-section">
+                        <label class="section-label">إضافة مرفق</label>
+                        <div class="file-upload-area">
+                            <input type="file" id="attachment" name="attachment" multiple 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip">
+                            <label for="attachment" class="file-upload-label">
+                                <i class="ri-attachment-2"></i>
+                                <span>اختر الملفات أو اسحبها هنا</span>
+                            </label>
+                            <p class="file-info">يمكنك إرفاق ملفات PDF، Word، صور، أو ملفات مضغوطة (الحد الأقصى 10MB)</p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">تسليم</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include JavaScript -->
+    <script src="arabic-script.js"></script>
+    
+    <script>
+        // Handle interest and budget selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Back button -> slide overlay then force main loader (clean, professional)
+            const backBtn = document.querySelector('.back-button');
+            if (backBtn) {
+                backBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const overlay = document.createElement('div');
+                    overlay.className = 'back-slide-overlay';
+                    document.body.appendChild(overlay);
+                    requestAnimationFrame(()=> overlay.classList.add('active'));
+                    setTimeout(()=>{
+                        try { sessionStorage.setItem('force-loader-next','1'); } catch(e) {}
+                        window.location.replace('./?ref=back');
+                    }, 500);
+                });
+            }
+
+            // Handle interest selection (multiple)
+            const interestOptions = document.querySelectorAll('.interest-option');
+            const selectedInterests = [];
+
+            interestOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const value = this.dataset.value;
+                    
+                    if (this.classList.contains('selected')) {
+                        // Deselect
+                        this.classList.remove('selected');
+                        const index = selectedInterests.indexOf(value);
+                        if (index > -1) {
+                            selectedInterests.splice(index, 1);
+                        }
+                    } else {
+                        // Select
+                        this.classList.add('selected');
+                        selectedInterests.push(value);
+                    }
+                    
+                    console.log('Selected interests:', selectedInterests);
+                });
+            });
+
+            // Handle budget selection (single)
+            const budgetOptions = document.querySelectorAll('.budget-option');
+            let selectedBudget = null;
+
+            budgetOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from all budget options
+                    budgetOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Select current option
+                    this.classList.add('selected');
+                    selectedBudget = this.dataset.value;
+                    
+                    console.log('Selected budget:', selectedBudget);
+                });
+            });
+
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = {
+                        interests: selectedInterests,
+                        budget: selectedBudget,
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        details: document.getElementById('details').value
+                    };
+                    
+                    console.log('Form data:', formData);
+                    alert('تم إرسال رسالتك بنجاح!');
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

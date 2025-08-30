@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "animejs": "^4.0.2",
+    "framer-motion": "^12.23.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "name": "affinity-marketing-agency-copy-3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "arabic-script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Braa2/digital-tartget.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Braa2/digital-tartget/issues"
+  },
+  "homepage": "https://github.com/Braa2/digital-tartget#readme"
+}

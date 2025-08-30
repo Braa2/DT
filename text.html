@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Anime.js Showcase — كثافة مؤثرات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
+  <style>
+    :root{
+      --bg:#0b1326; --fg:#e5e7eb; --muted:#9aa4b2;
+      --c1:#22d3ee; --c2:#a855f7; --c3:#f59e0b; --c4:#10b981; --c5:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:radial-gradient(1400px 600px at 20% 10%, rgba(168,85,247,.18), transparent 55%), #0b1326;
+      color:var(--fg); font-family:"Tajawal",system-ui; overflow-x:hidden;
+    }
+    .nav{position:fixed; inset:16px 16px auto 16px; z-index:99; display:flex; gap:10px; align-items:center}
+    .nav a,.pill{text-decoration:none; color:#fff; border:1px solid rgba(255,255,255,.18); padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); backdrop-filter:blur(8px)}
+    .pill{font-weight:800}
+    .progress{position:fixed; left:0; top:0; height:3px; width:0; background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3)); z-index:100}
+
+    section{min-height:100svh; padding:120px 20px 80px; display:grid; place-items:center; position:relative}
+    .inner{width:min(1100px,92vw)}
+    h2{margin:0 0 10px; font-size:clamp(28px,5vw,44px)}
+    p{margin:0 0 18px; color:var(--muted)}
+    .grid{display:grid; gap:16px}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    @media (max-width:900px){.grid-3,.grid-4{grid-template-columns:1fr}}
+
+    .card{
+      border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:20px; background:rgba(255,255,255,.05);
+      transform:translateZ(0)
+    }
+    .tag{font-size:12px; display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.18); color:#cbd5e1}
+    .kpi{ text-align:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:18px}
+    .num{font-size:clamp(34px,7vw,60px); font-weight:800}
+    .hero{
+      text-align:center;
+      background:
+        radial-gradient(800px 300px at 80% 10%, rgba(34,211,238,.14), transparent 60%),
+        radial-gradient(700px 320px at 20% 85%, rgba(245,158,11,.14), transparent 60%);
+    }
+    .title{font-weight:800; line-height:1.05; font-size: clamp(40px,8vw,92px); margin:.1em 0}
+    .title .ch{display:inline-block; opacity:0}
+    .subtitle{color:#cbd5e1; font-size:clamp(16px,2.4vw,20px)}
+    .cta{margin-top:10px; display:flex; gap:10px; justify-content:center}
+    .btn{border:none; border-radius:12px; padding:10px 16px; font-weight:800; color:#0b1326; background:linear-gradient(135deg,var(--c1),var(--c2)); cursor:pointer}
+
+    /* ألوان خلفيات مختلفة لكل سكشن */
+    #s-stagger    {background:linear-gradient(180deg, #0b1326, #0b152b)}
+    #s-path       {background:radial-gradient(900px 280px at 10% 10%, rgba(16,185,129,.14), transparent 60%)}
+    #s-keyframes  {background:radial-gradient(1000px 380px at 90% 20%, rgba(239,68,68,.14), transparent 60%)}
+    #s-timeline   {background:radial-gradient(900px 280px at 50% 100%, rgba(168,85,247,.14), transparent 60%)}
+    #s-steps      {background:radial-gradient(600px 220px at 30% 0%, rgba(34,211,238,.16), transparent 60%)}
+    #s-counters   {background:radial-gradient(600px 300px at 80% 0%, rgba(245,158,11,.16), transparent 60%)}
+
+    /* مسرح للـ keyframes */
+    .ball{width:22px;height:22px;border-radius:50%;background:#fff; display:inline-block; margin:10px; filter:blur(0px)}
+    .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+
+    /* رسم Path */
+    svg{max-width:100%; height:auto}
+    .dot{width:16px;height:16px;border-radius:50%;background:var(--c3); position:absolute; top:0; left:0; transform:translate(-8px,-8px); box-shadow:0 0 18px var(--c3)}
+    .stroke{stroke:#fff; stroke-width:4; fill:none; opacity:.85}
+
+    /* Timeline بطاقات */
+    .tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    .tile{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:22px}
+
+    /* steps (sprite-like) */
+    .steps-box{width:220px;height:220px; border-radius:18px; background:#111827; display:grid; place-items:center; border:1px solid rgba(255,255,255,.15)}
+    .steps-thing{font-size:86px; filter:drop-shadow(0 14px 40px rgba(255,255,255,.15))}
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="nav">
+    <span class="pill">Anime.js كثافة مؤثرات</span>
+    <a href="#hero">الرئيسية</a>
+    <a href="#s-stagger">Stagger Grid</a>
+    <a href="#s-path">Path Motion</a>
+    <a href="#s-keyframes">Keyframes</a>
+    <a href="#s-timeline">Timeline</a>
+    <a href="#s-steps">Steps</a>
+    <a href="#s-counters">Counters</a>
+  </div>
+
+  <!-- HERO: حروف متتابعة + elastic -->
+  <section class="hero" id="hero">
+    <div class="inner">
+      <div class="tag">يشبه أمثلة الدوكيومنتيشن</div>
+      <h1 class="title" id="heroTitle">كل شيء هنا يتحرك بروح <span style="white-space:nowrap">anime.js</span></h1>
+      <p class="subtitle">حروف متتابعة، جريد يتفجّر من الوسط، مسارات SVG، keyframes، timelines، steps، عدّادات… كلها شغّالة.</p>
+      <div class="cta">
+        <button class="btn" id="replayHero">أعد التشغيل</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGGER GRID: from:'center' + grid -->
+  <section id="s-stagger">
+    <div class="inner">
+      <h2>Stagger مع grid و from:center</h2>
+      <p>عرض كلاسيكي من الوثائق: تتابع من الوسط للخارج + دوران/تحجيم.</p>
+      <div class="grid grid-4" id="staggerGrid">
+        <!-- 16 كارد -->
+        <div class="card">1</div><div class="card">2</div><div class="card">3</div><div class="card">4</div>
+        <div class="card">5</div><div class="card">6</div><div class="card">7</div><div class="card">8</div>
+        <div class="card">9</div><div class="card">10</div><div class="card">11</div><div class="card">12</div>
+        <div class="card">13</div><div class="card">14</div><div class="card">15</div><div class="card">16</div>
+      </div>
+      <div style="margin-top:10px" class="row">
+        <button class="btn" id="replayStagger">أعد Stagger</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATH MOTION: anime.path + setDashoffset -->
+  <section id="s-path">
+    <div class="inner">
+      <h2>الحركة على مسار + رسم Stroke</h2>
+      <p>استخدام <b>anime.path</b> لتحريك نقطة على مسار، مع <b>setDashoffset</b> لرسم الخط.</p>
+
+      <div style="position:relative; margin:20px 0 30px">
+        <svg id="waveSVG" viewBox="0 0 900 220">
+          <path id="wave" class="stroke"
+            d="M 0 110 C 90 10, 180 210, 270 110 C 360 10, 450 210, 540 110 C 630 10, 720 210, 810 110 C 855 80, 900 100, 900 100" />
+        </svg>
+        <div class="dot" id="dot"></div>
+      </div>
+
+      <div class="row">
+        <span class="tag">direction: 'alternate'</span>
+        <span class="tag">loop: true</span>
+        <span class="tag">easing: 'easeInOutSine'</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEYFRAMES: translate/rotate/scale/filter/color -->
+  <section id="s-keyframes">
+    <div class="inner">
+      <h2>Keyframes متنوعة</h2>
+      <p>تتابع إطار-بإطار لخصائص متعددة (موضع/دوران/تحجيم/فلتر/لون) على عناصر كثيرة.</p>
+      <div class="row" id="ballsRow">
+        <!-- 24 كرة -->
+        <span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span>
+        <span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span>
+        <span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span>
+        <span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span><span class="ball"></span>
+      </div>
+      <div class="row"><button class="btn" id="replayKF">أعد Keyframes</button></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE: offsets + relative times -->
+  <section id="s-timeline">
+    <div class="inner">
+      <h2>Timeline مع أوفست نسبي</h2>
+      <p>سلسلة بطاقات بتوقيتات متداخلة ( '-=300', '+=120' ) مثل أمثلة الدوك.</p>
+      <div class="tiles" id="tiles">
+        <div class="tile"><b>الخطوة 1</b><div>تهيئة</div></div>
+        <div class="tile"><b>الخطوة 2</b><div>تحميل</div></div>
+        <div class="tile"><b>الخطوة 3</b><div>تفعيل</div></div>
+      </div>
+      <div class="row"><button class="btn" id="replayTL">أعد Timeline</button></div>
+    </div>
+  </section>
+
+  <!-- STEPS easing -->
+  <section id="s-steps">
+    <div class="inner">
+      <h2>Easing: steps()</h2>
+      <p>قفزات متقطّعة تحاكي سبرايت/إطارات ثابتة.</p>
+      <div class="row">
+        <div class="steps-box"><div class="steps-thing" id="stepsThing">⬤</div></div>
+        <div class="steps-box"><div class="steps-thing" id="stepsThing2">◆</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTERS + ألوان تتنفس -->
+  <section id="s-counters">
+    <div class="inner">
+      <h2>عدّادات + تنفّس لوني</h2>
+      <p>تحريك قيم JS مباشرة + keyframes للألوان/الشفافية.</p>
+      <div class="grid grid-4" id="kpis">
+        <div class="kpi"><div class="num" data-to="120">0</div><div>مشروع</div></div>
+        <div class="kpi"><div class="num" data-to="48">0</div><div>عميل</div></div>
+        <div class="kpi"><div class="num" data-to="9">0</div><div>جوائز</div></div>
+        <div class="kpi"><div class="num" data-to="99">0</div><div>تقييم</div></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    /* Progress Bar */
+    const prog = document.getElementById('progress');
+    const onScroll = () => {
+      const d = document.documentElement;
+      prog.style.width = (d.scrollTop/(d.scrollHeight-d.clientHeight))*100 + '%';
+    };
+    document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+    /* HERO letters: split إلى span.ch + elastic + stagger */
+    const heroTitle = document.getElementById('heroTitle');
+    heroTitle.innerHTML = heroTitle.textContent.replace(/\S/g, m => `<span class="ch">${m}</span>`);
+    const heroAnim = () => anime({
+      targets: '.title .ch',
+      opacity: [0,1],
+      translateY: [40,0],
+      rotateZ: () => anime.random(-8,8),
+      delay: anime.stagger(20, {start: 80}),
+      easing: 'easeOutElastic(1, .6)',
+      duration: 1200
+    });
+    heroAnim();
+    document.getElementById('replayHero').onclick = () => { anime.remove('.title .ch'); heroAnim(); };
+
+    /* STAGGER GRID: from:'center', grid:[rows,cols], scale/rotate */
+    const runStagger = () => anime({
+      targets:'#staggerGrid .card',
+      translateY: [40,0],
+      scale: [
+        {value:.6, duration:0},
+        {value:1, duration:700, easing:'spring(1, 70, 12, 0)'}
+      ],
+      rotate: anime.stagger([ -8, 8 ], {grid:[4,4], from: 'center'}),
+      delay: anime.stagger(50, {grid:[4,4], from: 'center'}),
+      opacity: [0,1]
+    });
+    runStagger();
+    document.getElementById('replayStagger').onclick = () => { anime.remove('#staggerGrid .card'); runStagger(); };
+
+    /* PATH MOTION: anime.path + setDashoffset */
+    const pathEl = document.querySelector('#wave');
+    const pathMotion = anime.path('#wave');
+    const dash = anime.setDashoffset(pathEl);
+    pathEl.setAttribute('stroke-dasharray', dash);
+    pathEl.setAttribute('stroke-dashoffset', dash);
+
+    anime({
+      targets: pathEl,
+      strokeDashoffset: [dash, 0],
+      duration: 2500,
+      easing: 'easeInOutSine',
+      direction: 'alternate',
+      loop: true
+    });
+
+    anime({
+      targets:'#dot',
+      translateX: pathMotion('x'),
+      translateY: pathMotion('y'),
+      rotate: pathMotion('angle'),
+      easing: 'easeInOutSine',
+      duration: 3500,
+      direction: 'alternate',
+      loop: true
+    });
+
+    /* KEYFRAMES على مجموعة كبيرة + stagger من الوسط */
+    function kf() {
+      anime({
+        targets: '#ballsRow .ball',
+        keyframes: [
+          { translateY: -40, scale: 1.1, duration: 300, easing: 'easeOutQuad' },
+          { translateX: 40, rotate: 20, duration: 300, easing: 'easeOutCubic' },
+          { translateY: 0, filter: 'blur(2px)', duration: 220, easing: 'easeInOutSine' },
+          { translateX: 0, rotate: 0, scale: 1, filter: 'blur(0px)', background: '#fff', duration: 260 }
+        ],
+        delay: anime.stagger(40, {from:'center'}),
+      });
+      // موجة لون/شفافية تراكبية
+      anime({
+        targets:'#ballsRow .ball',
+        background: [
+          { value: '#22d3ee', duration: 300 },
+          { value: '#a855f7', duration: 300 },
+          { value: '#f59e0b', duration: 300 },
+          { value: '#ffffff', duration: 300 },
+        ],
+        opacity: [
+          { value:.6, duration: 220, easing:'easeInOutSine' },
+          { value:1,  duration: 220, easing:'easeInOutSine' }
+        ],
+        delay: anime.stagger(30, {from:'center'}),
+      });
+    }
+    kf();
+    document.getElementById('replayKF').onclick = ()=> { anime.remove('#ballsRow .ball'); kf(); };
+
+    /* TIMELINE مع أوفست نسبي */
+    function tlRun(){
+      const tl = anime.timeline({ autoplay:false });
+      tl
+        .add({
+          targets:'#tiles .tile:nth-child(1)',
+          translateY:[40,0], opacity:[0,1], duration:700, easing:'easeOutExpo'
+        })
+        .add({
+          targets:'#tiles .tile:nth-child(2)',
+          translateY:[40,0], opacity:[0,1], duration:700, easing:'easeOutExpo'
+        }, '-=300') // يبدأ قبل انتهاء السابق بـ 300ms
+        .add({
+          targets:'#tiles .tile:nth-child(3)',
+          translateY:[40,0], opacity:[0,1], duration:700, easing:'easeOutExpo'
+        }, '+=120'); // بعد 120ms من الثاني
+      tl.play();
+    }
+    tlRun();
+    document.getElementById('replayTL').onclick = ()=> { anime.remove('#tiles .tile'); tlRun(); };
+
+    /* STEPS easing */
+    anime({
+      targets:'#stepsThing',
+      translateX: [0, 160],
+      direction:'alternate', loop:true,
+      duration: 1200,
+      easing: 'steps(6)'
+    });
+    anime({
+      targets:'#stepsThing2',
+      rotate: [0, 360],
+      scale: [{value:1.4, duration:0}, {value:1, duration:800}],
+      duration: 1400, loop:true, direction:'alternate',
+      easing: 'steps(8)'
+    });
+
+    /* COUNTERS: JS object + لون يتنفس */
+    document.querySelectorAll('#kpis .num').forEach(el=>{
+      const to = parseInt(el.dataset.to||'0', 10);
+      const obj = {val:0};
+      anime({
+        targets: obj,
+        val: to,
+        round: 1,
+        duration: 1600,
+        easing: 'easeOutExpo',
+        update: () => el.textContent = obj.val
+      });
+    });
+    anime({
+      targets:'#kpis .kpi',
+      keyframes:[
+        { background: 'rgba(255,255,255,.10)', duration: 900 },
+        { background: 'rgba(255,255,255,.06)', duration: 900 }
+      ],
+      easing:'easeInOutSine',
+      direction:'alternate',
+      loop:true,
+      delay: anime.stagger(150)
+    });
+
+    /* تلوين ديناميكي للـ progress (تحريك CSS vars عبر update) */
+    const gradObj = { t:0 };
+    anime({
+      targets: gradObj,
+      t: 1,
+      duration: 4000,
+      direction:'alternate',
+      easing:'easeInOutSine',
+      loop:true,
+      update: ()=>{
+        const a = Math.floor(gradObj.t*360);
+        prog.style.background = `linear-gradient(90deg, hsl(${a},80%,60%), hsl(${(a+120)%360},80%,60%), hsl(${(a+240)%360},80%,60%))`;
+      }
+    });
+
+    /* تشغيل أجزاء عند الظهور (IntersectionObserver) */
+    const io = new IntersectionObserver((ents)=>{
+      ents.forEach(e=>{
+        if(!e.isIntersecting) return;
+        const id = e.target.id;
+        if(id==='s-stagger'){ runStagger(); }
+        if(id==='s-keyframes'){ kf(); }
+        if(id==='s-timeline'){ tlRun(); }
+      });
+    }, {threshold:.25});
+    ['s-stagger','s-keyframes','s-timeline'].forEach(id=> io.observe(document.getElementById(id)));
+  });
+  </script>
+</body>
+</html>
