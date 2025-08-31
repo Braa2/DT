@@ -62,7 +62,15 @@ const translations = {
 
         // Works Section
         works: {
-            subtitle: "مجموعة من المشاريع التي نفخر بتقديمها لعملائنا، كل مشروع يحكي قصة نجاح."
+            subtitle: "مجموعة من المشاريع التي نفخر بتقديمها لعملائنا، كل مشروع يحكي قصة نجاح.",
+            projects: {
+                p1: { title: "بروش للمطاعم", desc: "تصميم هوية بصرية متكاملة وتطوير موقع إلكتروني." },
+                p2: { title: "المسار الذهبي", desc: "منصة تعليمية تفاعلية مع نظام إدارة متقدم." },
+                p3: { title: "جواهر", desc: "تطبيق جوال لمتجر مجوهرات بتجربة تسوق مميزة." },
+                p4: { title: "سوبيريور إيفنت", desc: "تصميم هوية بصرية لشركة تنظيم الفعاليات." },
+                p5: { title: "لافيدا", desc: "موقع إلكتروني متطور مع تجربة مستخدم مميزة." },
+                p6: { title: "ويكد سيتي", desc: "تطبيق جوال للألعاب مع واجهة تفاعلية مبتكرة." }
+            }
         },
 
         // Features Section
@@ -222,7 +230,15 @@ const translations = {
 
         // Works Section
         works: {
-            subtitle: "A collection of projects we are proud to deliver to our clients, each project tells a success story."
+            subtitle: "A collection of projects we are proud to deliver to our clients, each project tells a success story.",
+            projects: {
+                p1: { title: "Brosh Restaurants", desc: "Full visual identity design and website development." },
+                p2: { title: "Golden Path", desc: "Interactive learning platform with advanced management system." },
+                p3: { title: "Jawaher", desc: "Mobile app for a jewelry store with a distinctive shopping experience." },
+                p4: { title: "Superior Event", desc: "Visual identity design for an event management company." },
+                p5: { title: "Lavida", desc: "Advanced website with an outstanding user experience." },
+                p6: { title: "Wicked City", desc: "Gaming mobile app with innovative interactive interface." }
+            }
         },
 
         // Features Section

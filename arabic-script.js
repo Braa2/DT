@@ -49,6 +49,9 @@ function applyTranslations(langCode) {
     // Update moving text marquee
     updateMovingText(langCode, translations);
 
+    // Normalize quotes alignment after translation
+    try { normalizeQuotesAlignment(); } catch (e) {}
+
     // Rebuild animated submit button text (prevents losing spans on translation)
     try {
         updateAnimatedSubmitButton(translations);
@@ -103,6 +106,23 @@ function updateAnimatedSubmitButton(translations) {
     const span1 = '<span class="span-mother">' + chars.map(ch => `<span>${ch}</span>`).join('') + '</span>';
     const span2 = '<span class="span-mother2">' + chars.map(ch => `<span>${ch}</span>`).join('') + '</span>';
     btn.innerHTML = span1 + span2;
+}
+
+// Make quote alignment match current language and remove RTL offsets
+function normalizeQuotesAlignment() {
+    const body = document.body;
+    const isEnglish = body && body.classList.contains('english-mode');
+    const first = document.querySelector('.quote-first-paragraph');
+    const second = document.querySelector('.quote-second-paragraph');
+    const all = document.querySelectorAll('.quote-paragraph');
+    if (all && all.length) {
+        all.forEach(el => {
+            el.style.direction = isEnglish ? 'ltr' : 'rtl';
+            el.style.textAlign = isEnglish ? 'left' : 'justify';
+        });
+    }
+    if (first) first.style.right = isEnglish ? '0px' : '370px';
+    if (second) second.style.right = isEnglish ? '0px' : '110px';
 }
 
 // ===== CUSTOM CURSOR =====
@@ -2542,11 +2562,7 @@ function initializeFeaturesGridAnimation() {
                 // Add in-view class to trigger animations
                 featuresSection.classList.add('in-view');
                 console.log('✨ Features grid section in view - animations triggered');
-            } else {
-                // Remove in-view class when out of view
-                featuresSection.classList.remove('in-view');
-                console.log('🌙 Features grid section out of view - animations reset');
-            }
+            } 
         });
     }, {
         threshold: 0.1, // Trigger when 10% of section is visible

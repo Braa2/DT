@@ -2407,8 +2407,6 @@ body {
     position: relative;
     margin-top: 20px;
     font-weight: 500;
-    right: 370px;
-
 }
 
 .quote-second-paragraph {
@@ -2417,7 +2415,31 @@ body {
     position: relative;
     margin-top: 20px;
     font-weight: 500;
-    right: 110px;
+
+}
+/* Language-aware alignment for quotes */
+.english-mode .quote-first-paragraph {
+    text-align: center;
+    left: -150px;
+}
+.english-mode .quote-second-paragraph {
+    direction: ltr;
+    text-align: center;
+    text-align: center !important;
+    right: auto !important;
+    left: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+}
+
+.arabic-mode .quote-paragraph,
+.arabic-mode .quote-first-paragraph,
+.arabic-mode .quote-second-paragraph {
+    direction: rtl;
+    text-align: justify;
+    
+
 }
 
 /* ===== PROGRAMMING TOOLS MARQUEE SECTION - FIXED VERSION ===== */
