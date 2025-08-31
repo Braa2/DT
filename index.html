@@ -47,10 +47,7 @@
     <script>
         (function () {
             try {
-                var force = (sessionStorage.getItem('force-loader-next') === '1') || (location.search.indexOf('ref=back') > -1);
-                if (force) {
-                    document.write('<style id="preload-style">body{overflow:hidden!important}#loading-screen{display:flex!important;opacity:1!important;visibility:visible!important;transform:translateY(0)!important}</style>');
-                }
+                document.write('<style id="preload-style">body{overflow:hidden!important}#loading-screen{display:flex!important;opacity:1!important;visibility:visible!important;transform:translateY(0)!important}</style>');
             } catch (e) { }
         })();
     </script>
@@ -133,14 +130,6 @@
                         fill="white" />
                 </g>
             </svg>
-            <div class="loading-text">
-                <span data-translate="loading.text">جاري التحميل...</span>
-                <div class="loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
         </div>
     </div>
    
@@ -217,7 +206,7 @@
                 <div class="hero-container">
                     <div class="hero-glow">
                         <h1 class="hero-title">
-                            <span class="word" data-translate="hero.title">نحول أفكارك الى واقع رقمي</span>
+                            <span class="word" data-translate="hero.title">نحول الافكار الى واقع رقمي</span>
                         </h1>
 
                         <p class="hero-description" data-translate="hero.subtitle">

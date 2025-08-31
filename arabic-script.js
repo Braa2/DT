@@ -49,6 +49,11 @@ function applyTranslations(langCode) {
     // Update moving text marquee
     updateMovingText(langCode, translations);
 
+    // Rebuild animated submit button text (prevents losing spans on translation)
+    try {
+        updateAnimatedSubmitButton(translations);
+    } catch (e) {}
+
     console.log(`✅ ${elementsToTranslate.length} elements translated to ${langCode}`);
 }
 
@@ -84,6 +89,20 @@ function updateMovingText(langCode, translations) {
     content2.innerHTML = newContent;
 
     console.log(`✅ Moving text updated to ${langCode}:`, movingTexts);
+}
+
+// Helper: rebuild animated submit button content from current translation
+function updateAnimatedSubmitButton(translations) {
+    const btn = document.querySelector('.submit-btn');
+    if (!btn) return;
+    const label = (translations && translations.contact && translations.contact.submit) ? translations.contact.submit : (btn.textContent || '').trim();
+    if (!label) return;
+
+    // Build split characters for hover effect
+    const chars = Array.from(label);
+    const span1 = '<span class="span-mother">' + chars.map(ch => `<span>${ch}</span>`).join('') + '</span>';
+    const span2 = '<span class="span-mother2">' + chars.map(ch => `<span>${ch}</span>`).join('') + '</span>';
+    btn.innerHTML = span1 + span2;
 }
 
 // ===== CUSTOM CURSOR =====
@@ -738,8 +757,8 @@ function showExistingLoaderThenGoHome() {
             loader = document.createElement('div');
             loader.id = 'loading-screen';
             loader.className = 'loading-screen';
-            // Minimal structure; site CSS will style it
-            loader.innerHTML = '<div class="loading-text">جاري التحميل...</div><div class="loading-dots"><span></span><span></span><span></span></div>';
+            // Minimal structure without text/dots; site CSS will style overlay
+            loader.innerHTML = '<div class="loading-logo-container"></div>';
             document.body.appendChild(loader);
         }
 
@@ -836,8 +855,12 @@ function initializeApp() {
     initializeLanguageToggle();
     console.log('✅ Language toggle initialized');
 
-    initializeContactForm();
-    console.log('✅ Contact form initialized');
+    if (!isContactPage) {
+        initializeContactForm();
+        console.log('✅ Contact form initialized');
+    } else {
+        console.log('ℹ️ Skipping generic contact form on contact page');
+    }
 
     initializeBinaryQuestionMark();
     console.log('✅ Binary question mark initialized');
@@ -1490,8 +1513,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     if (contactBody) {
                         // Remove old contact styles first
-                        const oldContactStyles = document.querySelectorAll('#contact-page-styles, style[data-contact="true"]');
-                        oldContactStyles.forEach(style => style.remove());
+                        const oldContactStyles = document.querySelectorAll('#contact-page-styles, style[data-contact="true"], link[data-contact="true"]');
+                        oldContactStyles.forEach(node => node.remove());
+
+                        // Disable global site stylesheet on contact page
+                        const siteCssLink = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).find(l => (l.getAttribute('href')||'').includes('arabic-hero.css'));
+                        if (siteCssLink) {
+                            siteCssLink.parentNode.removeChild(siteCssLink);
+                            console.log('🧹 Removed global site stylesheet for contact page');
+                        }
 
                         // Copy ALL CSS from contact.html head
                         const contactHead = doc.head;
@@ -1503,7 +1533,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                 newStyle.setAttribute('data-contact', 'true');
                                 newStyle.innerHTML = styleElement.innerHTML;
                                 document.head.appendChild(newStyle);
-                                console.log('CSS loaded from contact page');
+                                console.log('Inline CSS loaded from contact page');
+                            } else if (styleElement.tagName === 'LINK' && styleElement.rel === 'stylesheet') {
+                                const newLink = document.createElement('link');
+                                newLink.rel = 'stylesheet';
+                                newLink.href = styleElement.href;
+                                newLink.setAttribute('data-contact', 'true');
+                                document.head.appendChild(newLink);
+                                console.log('Linked CSS loaded from contact page:', newLink.href);
                             }
                         });
 
@@ -1808,33 +1845,40 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Back button initialized (uses existing loader + refresh)');
         }
 
-        // Initialize interests selection
-        const interestOptions = document.querySelectorAll('.interest-option');
-        interestOptions.forEach(option => {
-            option.addEventListener('click', function () {
-                this.classList.toggle('selected');
-                console.log('Interest selected:', this.dataset.value);
-            });
-        });
+        // Defer attaching selection handlers until after form clone
 
-        // Initialize budget selection (single choice)
-        const budgetOptions = document.querySelectorAll('.budget-option');
-        budgetOptions.forEach(option => {
-            option.addEventListener('click', function () {
-                // Remove selected from all others
-                budgetOptions.forEach(opt => opt.classList.remove('selected'));
-                // Add selected to clicked one
-                this.classList.add('selected');
-                console.log('Budget selected:', this.dataset.value);
-            });
-        });
-
-        // Initialize form if exists
+        // Initialize form if exists with translated success message
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
-            contactForm.addEventListener('submit', function (e) {
+            // Remove any existing listeners by cloning (avoid duplicates)
+            const newForm = contactForm.cloneNode(true);
+            contactForm.parentNode.replaceChild(newForm, contactForm);
+
+            newForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                alert('تم إرسال رسالتك بنجاح!');
+                try {
+                    const savedLang = localStorage.getItem('preferred-language') || 'ar';
+                    const msg = (window.translations && window.translations[savedLang] && window.translations[savedLang].contact && window.translations[savedLang].contact.success) || 'تم الإرسال';
+                    alert(msg);
+                } catch (e) {
+                    alert('تم الإرسال');
+                }
+            });
+
+            // Re-select options from the cloned form and attach handlers
+            const interestOptions = document.querySelectorAll('.interest-option');
+            interestOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    this.classList.toggle('selected');
+                });
+            });
+
+            const budgetOptions = document.querySelectorAll('.budget-option');
+            budgetOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    budgetOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
             });
         }
 
@@ -1846,6 +1890,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.style.height = this.scrollHeight + 'px';
             });
         }
+
+        // Apply current language translations and direction
+        setTimeout(() => {
+            try {
+                const savedLang = localStorage.getItem('preferred-language') || 'ar';
+                applyTranslations(savedLang);
+                if (savedLang === 'en') {
+                    document.documentElement.setAttribute('dir', 'ltr');
+                    document.documentElement.setAttribute('lang', 'en');
+                    document.body.setAttribute('dir', 'ltr');
+                    document.body.setAttribute('lang', 'en');
+                    document.body.classList.add('english-mode');
+                    document.body.classList.remove('arabic-mode');
+                } else {
+                    document.documentElement.setAttribute('dir', 'rtl');
+                    document.documentElement.setAttribute('lang', 'ar');
+                    document.body.setAttribute('dir', 'rtl');
+                    document.body.setAttribute('lang', 'ar');
+                    document.body.classList.add('arabic-mode');
+                    document.body.classList.remove('english-mode');
+                }
+                console.log('✅ Contact page translated:', savedLang);
+            } catch (e) {
+                console.log('⚠️ Failed to apply contact translations');
+            }
+        }, 50);
 
         console.log('Contact page interactions initialized');
     }

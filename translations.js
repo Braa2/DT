@@ -105,7 +105,37 @@ const translations = {
         contact: {
             title: "لديك فكرة؟",
             subtitle: "أخبرنا عن فكرتك ودعنا نحولها إلى واقع رقمي مذهل",
-            button: "اخبرنا"
+            button: "اخبرنا",
+            back: "العودة",
+            hello: "اهلا وسهلا!",
+            tellUs: "اخبرنا بتفاصيل فكرتك أو مشروعك",
+            interestedIn: "أنا مهتم بـ...",
+            interests: {
+                website: "موقع إلكتروني",
+                mobile: "تطبيق جوال",
+                branding: "هوية تجارية",
+                uiux: "تصميم UI/UX",
+                erp: "أنظمة إدارة موارد المؤسسات",
+                other: "أخرى"
+            },
+            name: "الاسم الكامل",
+            email: "الايميل",
+            phone: "رقم التواصل",
+            details: "زودنا بالتفاصيل",
+            budget: "ميزانية المشروع",
+            budgets: {
+                b1: "5,000 - 15,000 ريال",
+                b2: "15,000 - 30,000 ريال",
+                b3: "30,000 - 50,000 ريال",
+                b4: "50,000 - 100,000 ريال",
+                b5: "أكثر من 100,000 ريال",
+                b6: "ارغب بتقييم ميزانية المشروع"
+            },
+            attachment: "إضافة مرفق",
+            uploadHint: "اختر الملفات أو اسحبها هنا",
+            uploadInfo: "يمكنك إرفاق ملفات PDF، Word، صور، أو ملفات مضغوطة (الحد الأقصى 10MB)",
+            submit: "تسليم",
+            success: "تم إرسال رسالتك بنجاح!"
         },
 
         // Footer
@@ -235,7 +265,37 @@ const translations = {
         contact: {
             title: "Have an Idea?",
             subtitle: "Tell us about your idea and let us turn it into an amazing digital reality",
-            button: "Tell Us"
+            button: "Tell Us",
+            back: "Back",
+            hello: "Welcome!",
+            tellUs: "Tell us about your idea or project",
+            interestedIn: "I am interested in...",
+            interests: {
+                website: "Website",
+                mobile: "Mobile App",
+                branding: "Brand Identity",
+                uiux: "UI/UX Design",
+                erp: "ERP Systems",
+                other: "Other"
+            },
+            name: "Full Name",
+            email: "Email",
+            phone: "Phone Number",
+            details: "Provide details",
+            budget: "Project Budget",
+            budgets: {
+                b1: "5,000 - 15,000 SAR",
+                b2: "15,000 - 30,000 SAR",
+                b3: "30,000 - 50,000 SAR",
+                b4: "50,000 - 100,000 SAR",
+                b5: "> 100,000 SAR",
+                b6: "I would like a budget estimate"
+            },
+            attachment: "Add Attachment",
+            uploadHint: "Choose files or drag them here",
+            uploadInfo: "You can attach PDF, Word, images, or ZIP files (max 10MB)",
+            submit: "Submit",
+            success: "Your message has been sent successfully!"
         },
 
         // Footer

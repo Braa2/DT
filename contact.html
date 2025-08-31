@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <!-- Site fonts and shared styles for consistency -->
     <link rel="stylesheet" href="font.css">
-    <link rel="stylesheet" href="arabic-hero.css">
     
     <style>
         /* Smooth back slide overlay (same feel as loader) */
@@ -229,7 +228,7 @@
             border: 2px solid #000;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
             font-weight: 600;
             position: relative;
             overflow: hidden;
@@ -246,37 +245,35 @@
         .interest-option:nth-child(5) { animation: slideInFromBottom 0.5s ease-out 0.9s forwards; }
         .interest-option:nth-child(6) { animation: slideInFromBottom 0.5s ease-out 1.0s forwards; }
 
-        /* Hover effect - text disappears from top and appears from bottom */
-        .interest-option:hover .option-text {
-            animation: textFlipVertical 0.6s ease-in-out;
+        /* Strong hover: invert colors + lift */
+        .interest-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.14);
+            background-color: #000;
+            border-color: #000;
+            color: #fff;
         }
 
         /* Selected state - fill from bottom */
         .interest-option.selected {
-            background: #000;
+            background-color: #000;
             border-color: #000;
             color: #fff;
-            position: relative;
-        }
-
-        .interest-option.selected::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            transform: translateY(100%);
-            animation: fillFromBottom 0.4s ease-out forwards;
-            z-index: 1;
         }
 
         .interest-option .option-text {
             transition: all 0.3s ease;
             position: relative;
-            z-index: 2;
+            z-index: 1;
             display: block;
+        }
+
+
+        .interest-option:hover .option-text::before,
+        .budget-option:hover .option-text::before {
+            opacity: 1;
+            -webkit-animation-play-state: running;
+            animation-play-state: running;
         }
 
         .interest-option.selected .option-text {
@@ -300,7 +297,7 @@
             border: 2px solid #000;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
             font-weight: 600;
             position: relative;
             overflow: hidden;
@@ -316,9 +313,13 @@
         .budget-option:nth-child(4) { animation: slideInFromBottom 0.5s ease-out 1.5s forwards; }
         .budget-option:nth-child(5) { animation: slideInFromBottom 0.5s ease-out 1.6s forwards; }
         .budget-option:nth-child(6) { animation: slideInFromBottom 0.5s ease-out 1.7s forwards; }
-        /* Hover effect - text disappears from top and appears from bottom */
-        .budget-option:hover .option-text {
-            animation: textFlipVertical 0.6s ease-in-out;
+        /* Strong hover: invert colors + lift */
+        .budget-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.14);
+            background-color: #000;
+            border-color: #000;
+            color: #fff;
         }
 
         /* Selected state - fill from bottom */
@@ -326,20 +327,6 @@
             background: #000;
             border-color: #000;
             color: #fff;
-            position: relative;
-        }
-
-        .budget-option.selected::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            transform: translateY(100%);
-            animation: fillFromBottom 0.4s ease-out forwards;
-            z-index: 1;
         }
 
         .budget-option .option-text {
@@ -398,24 +385,66 @@
 
         .submit-btn {
             width: 100%;
-            background: linear-gradient(135deg, #00ffff 0%, #00bfff 100%);
-            color: white;
+            height: 56px;
+            background: #000;
+            color: #fff;
             border: none;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 0 24px;
+            border-radius: 2rem;
             font-family: 'Tajawal', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.1rem;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             margin-bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .submit-btn:hover {
-            background: #0099cc;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
         }
+
+        /* btn-17 inspired text swap (black/white only) */
+        .submit-btn .span-mother {
+            display: flex;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover .span-mother {
+            position: absolute;
+        }
+
+        .submit-btn:hover .span-mother span {
+            transform: translateY(1.2em);
+        }
+
+        .submit-btn .span-mother span:nth-child(1) { transition: 0.2s; }
+        .submit-btn .span-mother span:nth-child(2) { transition: 0.3s; }
+        .submit-btn .span-mother span:nth-child(3) { transition: 0.4s; }
+        .submit-btn .span-mother span:nth-child(4) { transition: 0.5s; }
+        .submit-btn .span-mother span:nth-child(5) { transition: 0.6s; }
+        .submit-btn .span-mother span:nth-child(6) { transition: 0.7s; }
+
+        .submit-btn .span-mother2 {
+            display: flex;
+            position: absolute;
+            overflow: hidden;
+        }
+
+        .submit-btn .span-mother2 span { transform: translateY(-1.2em); }
+        .submit-btn:hover .span-mother2 span { transform: translateY(0); }
+
+        .submit-btn .span-mother2 span { transition: 0.2s; }
+        .submit-btn .span-mother2 span:nth-child(2) { transition: 0.3s; }
+        .submit-btn .span-mother2 span:nth-child(3) { transition: 0.4s; }
+        .submit-btn .span-mother2 span:nth-child(4) { transition: 0.5s; }
+        .submit-btn .span-mother2 span:nth-child(5) { transition: 0.6s; }
+        .submit-btn .span-mother2 span:nth-child(6) { transition: 0.7s; }
 
         /* Animations */
         @keyframes slideInFromBottom {
@@ -492,7 +521,7 @@
             position: absolute;
             left: 0; right: 0; bottom: 0;
             height: 60%;
-            background: linear-gradient(to top, #fff 60%, transparent 100%);
+            background: transparent;
             pointer-events: none;
             z-index: 0;
             transition: opacity 0.4s;
@@ -501,6 +530,16 @@
         .interest-option:hover::after,
         .budget-option:hover::after {
             opacity: 0;
+        }
+
+        @-webkit-keyframes optionMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(5em); }
+        }
+
+        @keyframes optionMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(5em); }
         }
 
         /* Responsive design */
@@ -540,112 +579,120 @@
         <div class="header">
             <button class="back-button" type="button">
                 <i class="ri-arrow-right-line"></i>
-                <span>العودة</span>
+                <span data-translate="contact.back">العودة</span>
             </button>
         </div>
 
         <!-- Contact content -->
         <div class="container">
             <div class="contact-content">
-                <h1>اهلا وسهلا!</h1>
-                <p class="subtitle">اخبرنا بتفاصيل فكرتك أو مشروعك</p>
+                <h1 data-translate="contact.hello">اهلا وسهلا!</h1>
+                <p class="subtitle" data-translate="contact.tellUs">اخبرنا بتفاصيل فكرتك أو مشروعك</p>
                 
                 <form id="contactForm">
                     <!-- Interest In Section -->
                     <div class="interests-section">
-                        <label class="section-label">أنا مهتم بـ...</label>
+                        <label class="section-label" data-translate="contact.interestedIn">أنا مهتم بـ...</label>
                         <div class="interests-grid">
                             <div class="interest-option" data-value="website">
-                                <span class="option-text">موقع إلكتروني</span>
+                                <span class="option-text" data-translate="contact.interests.website" data-text="موقع إلكتروني">موقع إلكتروني</span>
                             </div>
                             <div class="interest-option" data-value="mobile-app">
-                                <span class="option-text">تطبيق جوال</span>
+                                <span class="option-text" data-translate="contact.interests.mobile" data-text="تطبيق جوال">تطبيق جوال</span>
                             </div>
                             <div class="interest-option" data-value="branding">
-                                <span class="option-text">هوية تجارية</span>
+                                <span class="option-text" data-translate="contact.interests.branding" data-text="هوية تجارية">هوية تجارية</span>
                             </div>
                             <div class="interest-option" data-value="ui-ux">
-                                <span class="option-text">تصميم UI/UX</span>
+                                <span class="option-text" data-translate="contact.interests.uiux" data-text="تصميم UI/UX">تصميم UI/UX</span>
                             </div>
                             <div class="interest-option" data-value="digital-marketing">
-                                <span class="option-text"> أنظمة إدارة موارد المؤسسات</span>
+                                <span class="option-text" data-translate="contact.interests.erp" data-text="أنظمة إدارة موارد المؤسسات"> أنظمة إدارة موارد المؤسسات</span>
                             </div>
                             <div class="interest-option" data-value="other">
-                                <span class="option-text">أخرى</span>
+                                <span class="option-text" data-translate="contact.interests.other" data-text="أخرى">أخرى</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Name Field -->
                     <div class="form-group">
-                        <label for="name">الاسم الكامل</label>
+                        <label for="name" data-translate="contact.name">الاسم الكامل</label>
                         <input type="text" id="name" name="name" required>
                     </div>
 
                     <!-- Email Field -->
                     <div class="form-group">
-                        <label for="email">الايميل</label>
+                        <label for="email" data-translate="contact.email">الايميل</label>
                         <input type="email" id="email" name="email" required>
                     </div>
 
                     <!-- Phone Field -->
                     <div class="form-group">
-                        <label for="phone">رقم التواصل</label>
+                        <label for="phone" data-translate="contact.phone">رقم التواصل</label>
                         <input type="tel" id="phone" name="phone" required>
                     </div>
 
                     <!-- Project Details -->
                     <div class="form-group">
-                        <label for="details">زودنا بالتفاصيل</label>
+                        <label for="details" data-translate="contact.details">زودنا بالتفاصيل</label>
                         <textarea id="details" name="details" required></textarea>
                     </div>
 
                     <!-- Project Budget -->
                     <div class="budget-section">
-                        <label class="section-label">ميزانية المشروع</label>
+                        <label class="section-label" data-translate="contact.budget">ميزانية المشروع</label>
                         <div class="budget-grid">
                             <div class="budget-option" data-value="5k-15k">
-                                <span class="option-text">5,000 - 15,000 ريال</span>
+                                <span class="option-text" data-translate="contact.budgets.b1" data-text="5,000 - 15,000 ريال">5,000 - 15,000 ريال</span>
                             </div>
                             <div class="budget-option" data-value="15k-30k">
-                                <span class="option-text">15,000 - 30,000 ريال</span>
+                                <span class="option-text" data-translate="contact.budgets.b2" data-text="15,000 - 30,000 ريال">15,000 - 30,000 ريال</span>
                             </div>
                             <div class="budget-option" data-value="30k-50k">
-                                <span class="option-text">30,000 - 50,000 ريال</span>
+                                <span class="option-text" data-translate="contact.budgets.b3" data-text="30,000 - 50,000 ريال">30,000 - 50,000 ريال</span>
                             </div>
                             <div class="budget-option" data-value="50k-100k">
-                                <span class="option-text">50,000 - 100,000 ريال</span>
+                                <span class="option-text" data-translate="contact.budgets.b4" data-text="50,000 - 100,000 ريال">50,000 - 100,000 ريال</span>
                             </div>
                             <div class="budget-option" data-value="100k+">
-                                <span class="option-text">أكثر من 100,000 ريال</span>
+                                <span class="option-text" data-translate="contact.budgets.b5" data-text="أكثر من 100,000 ريال">أكثر من 100,000 ريال</span>
                             </div>
                             <div class="budget-option" data-value="unknown">
-                                <span class="option-text">ارغب بتقييم ميزانية المشروع</span>
+                                <span class="option-text" data-translate="contact.budgets.b6" data-text="ارغب بتقييم ميزانية المشروع">ارغب بتقييم ميزانية المشروع</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- File Upload -->
                     <div class="file-upload-section">
-                        <label class="section-label">إضافة مرفق</label>
+                        <label class="section-label" data-translate="contact.attachment">إضافة مرفق</label>
                         <div class="file-upload-area">
                             <input type="file" id="attachment" name="attachment" multiple 
                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip">
                             <label for="attachment" class="file-upload-label">
                                 <i class="ri-attachment-2"></i>
-                                <span>اختر الملفات أو اسحبها هنا</span>
+                                <span data-translate="contact.uploadHint">اختر الملفات أو اسحبها هنا</span>
                             </label>
-                            <p class="file-info">يمكنك إرفاق ملفات PDF، Word، صور، أو ملفات مضغوطة (الحد الأقصى 10MB)</p>
+                            <p class="file-info" data-translate="contact.uploadInfo">يمكنك إرفاق ملفات PDF، Word، صور، أو ملفات مضغوطة (الحد الأقصى 10MB)</p>
                         </div>
                     </div>
 
-                    <button type="submit" class="submit-btn">تسليم</button>
+                    <button type="submit" class="submit-btn" data-translate="contact.submit">
+                        <span class="span-mother">
+                            <span>ت</span><span>س</span><span>ل</span><span>ي</span><span>م</span>
+                        </span>
+                        <span class="span-mother2">
+                            <span>ت</span><span>س</span><span>ل</span><span>ي</span><span>م</span>
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Include JavaScript -->
+    <script src="translations.js"></script>
     <script src="arabic-script.js"></script>
     
     <script>
@@ -724,7 +771,7 @@
                     };
                     
                     console.log('Form data:', formData);
-                    alert('تم إرسال رسالتك بنجاح!');
+                    alert(window.translations && (localStorage.getItem('preferred-language')||'ar')==='en' ? window.translations.en.contact.success : window.translations.ar.contact.success);
                 });
             }
         });
