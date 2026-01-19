@@ -300,44 +300,31 @@ function initializeNavbar() {
     
     if (!navbar) return;
 
-    let lastNavScrollY = window.scrollY;
-    let navTicking = false;
-
-    function updateNavbar() {
-        const currentScrollY = window.scrollY;
-
-        if (currentScrollY > 50) {
+    // Simple scroll behavior - add dark background when scrolled
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
-
-        if (currentScrollY > lastNavScrollY && currentScrollY > 100) {
-            navbar.classList.add('hidden');
-        } else {
-            navbar.classList.remove('hidden');
-        }
-
-        lastNavScrollY = currentScrollY;
-        navTicking = false;
-    }
-
-    function requestNavTick() {
-        if (!navTicking) {
-            requestAnimationFrame(updateNavbar);
-            navTicking = true;
-        }
-    }
-
-    window.addEventListener('scroll', requestNavTick);
+    });
+    
+    console.log('✅ Navbar initialized - sticky with scroll');
 
     // ===== BURGER MENU FUNCTIONALITY =====
     if (burgerMenu && mobileMenuOverlay) {
-        burgerMenu.addEventListener('click', function() {
+        // Ensure menu is closed on page load
+        burgerMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        
+        burgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Toggle classes
             burgerMenu.classList.toggle('active');
             mobileMenuOverlay.classList.toggle('active');
             
-            // Prevent body scroll when menu is open
+            // Toggle body scroll
             if (mobileMenuOverlay.classList.contains('active')) {
                 document.body.style.overflow = 'hidden';
             } else {
@@ -373,11 +360,24 @@ function initializeNavbar() {
         // Close menu when clicking outside
         mobileMenuOverlay.addEventListener('click', function(e) {
             if (e.target === mobileMenuOverlay) {
-                burgerMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+                closeMobileMenu();
             }
         });
+        
+        // Close menu when clicking any nav link
+        const mobileNavLinksAll = mobileMenuOverlay.querySelectorAll('.mobile-nav-link');
+        mobileNavLinksAll.forEach(link => {
+            link.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+        });
+        
+        // Helper function to close mobile menu
+        function closeMobileMenu() {
+            burgerMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     }
 }
 
@@ -511,19 +511,21 @@ function initializeScrollAnimations() {
 }
 
 // ===== HERO ANIMATIONS =====
+// Hero animations are now handled via CSS when body.loaded class is added
 function initializeHeroAnimations() {
-    const heroWords = document.querySelectorAll('.hero-title .word');
-
-    heroWords.forEach((word, index) => {
-        word.style.opacity = '0';
-        word.style.transform = 'translateY(50px)';
-
-        setTimeout(() => {
-            word.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            word.style.opacity = '1';
-            word.style.transform = 'translateY(0)';
-        }, index * 200);
-    });
+    // CSS handles the animations via body.loaded class
+    // This function is kept for compatibility but animations are CSS-driven
+    console.log('🎬 Hero animations will be triggered via CSS when body.loaded is added');
+    
+    // Add pulse animation to buttons after they appear
+    setTimeout(() => {
+        const buttons = document.querySelectorAll('.hero-actions .btn');
+        buttons.forEach((btn, index) => {
+            setTimeout(() => {
+                btn.classList.add('hero-btn-ready');
+            }, index * 100);
+        });
+    }, 2000); // After CSS animations complete
 }
 
 // ===== MOVING TEXT MARQUEE =====
@@ -694,15 +696,13 @@ function initializeLoadingScreen() {
     loadingScreenActive = true;
     
     // Ensure loading screen is visible and reset any previous state
-    loadingScreen.style.display = 'flex';
     loadingScreen.classList.remove('slide-up');
-    loadingScreen.style.transform = 'translateY(0)';
-    loadingScreen.style.opacity = '1';
-    loadingScreen.style.visibility = 'visible';
     
-    // Add loading class to body initially
+    // Add loading class to body initially - this hides hero elements via CSS
     body.classList.add('loading');
     body.classList.remove('loaded');
+    
+    console.log('📍 Loading state set - hero elements hidden via CSS');
     
     // Apply translations to loading screen
     setTimeout(() => {
@@ -726,25 +726,43 @@ function initializeLoadingScreen() {
 // Separate function to hide loading screen smoothly
 function hideLoadingScreen() {
     const loadingScreen = document.getElementById('loading-screen');
+    const transitionOverlay = document.getElementById('transition-overlay');
     const body = document.body;
     
     if (!loadingScreen || !loadingScreenActive) {
         return;
     }
     
-    console.log('🎬 Starting smooth fade-out animation');
+    console.log('🎬 Starting smooth transition');
     
-    // Add slide-up class to trigger the animation
-    loadingScreen.classList.add('slide-up');
-    body.classList.remove('loading');
-    body.classList.add('loaded');
+    // Step 1: Black overlay slides UP from bottom BEHIND loading screen
+    // This happens while loading screen is still visible
+    if (transitionOverlay) {
+        transitionOverlay.classList.add('slide-up');
+        console.log('Step 1: Black overlay sliding up behind loading screen');
+    }
     
-    // Remove loading screen completely after slide animation
+    // Step 2: After overlay is in place, hide loading screen (overlay is now covering)
     setTimeout(() => {
-        if (loadingScreen) {
-            loadingScreen.style.display = 'none';
-            loadingScreen.style.visibility = 'hidden';
-        }
+        loadingScreen.style.display = 'none';
+        console.log('Step 2: Loading screen hidden, overlay now visible');
+        
+        // Step 3: Slide overlay OUT to reveal content
+        setTimeout(() => {
+            if (transitionOverlay) {
+                transitionOverlay.classList.remove('slide-up');
+                transitionOverlay.classList.add('slide-out');
+                console.log('Step 3: Black overlay sliding out, revealing content');
+            }
+            
+            // Switch body classes to trigger content animations
+            body.classList.remove('loading');
+            body.classList.add('loaded');
+        }, 100);
+    }, 800);
+    
+    // Step 4: Clean up after all transitions complete
+    setTimeout(() => {
         // Remove any prepaint style that locked scrolling
         try {
             const pre = document.getElementById('preload-style');
@@ -757,9 +775,9 @@ function hideLoadingScreen() {
         if (backOverlay && backOverlay.parentNode) backOverlay.parentNode.removeChild(backOverlay);
         try { sessionStorage.removeItem('force-loader-next'); } catch(e) {}
         window.__loaderFinalized = true;
-        loadingScreenActive = false; // Mark as inactive
-        console.log('✅ Loading screen hidden smoothly, site ready');
-    }, 1200); // Wait for slide animation to complete
+        loadingScreenActive = false;
+        console.log('✅ Transition complete, site ready');
+    }, 1800);
 }
 
 // Show the existing loading screen, then navigate to home with a hard refresh
